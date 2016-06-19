@@ -5,7 +5,7 @@
   imageLoader.addEventListener('change', handleImage, false);
   var canvas = document.querySelector('#image');
   var ctx = canvas.getContext('2d');
-  
+
   var imageWorker = new Worker('scripts/worker.js');
 
   function handleImage(e){
@@ -17,9 +17,9 @@
         canvas.height = img.height;
         ctx.drawImage(img,0,0);
         original = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      }
+      };
       img.src = event.target.result;
-    }
+    };
     reader.readAsDataURL(e.target.files[0]);
   }
 
@@ -29,11 +29,11 @@
     var buttons = document.querySelectorAll('button');
     for (var i = 0; i < buttons.length; i++) {
       if (buttons[i].hasAttribute('disabled')) {
-        buttons[i].removeAttribute('disabled')
+        buttons[i].removeAttribute('disabled');
       } else {
         buttons[i].setAttribute('disabled', null);
       }
-    };
+    }
   }
 
   function manipulateImage(type) {
@@ -44,24 +44,24 @@
     imageWorker.postMessage({
         'imageData': imageData, 'type': type
     });
-    
+
     imageWorker.onmessage = function(e) {
     toggleButtonsAbledness();
     var image = e.data;
     if (image) return ctx.putImageData(e.data, 0, 0);
     console.log("No ManipulatedImage Returned");
     };
-    
+
     imageWorker.onerror = function(error) {
         function WorkerException(message) {
             this.name = 'WorkerException';
             this.message = message;
-        };
+        }
         throw new WorkerException('Worker ERRORED!');
     };
 
     return ctx.putImageData(imageData, 0, 0);
-  };
+  }
 
   function revertImage() {
     return ctx.putImageData(original, 0, 0);
